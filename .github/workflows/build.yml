@@ -195,7 +195,7 @@ jobs:
           libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
           libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
           libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev \
-          autoconf autoconf-archive automake libtool patchelf tarlz
+          autoconf autoconf-archive automake libtool patchelf
 
       - name: Install CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -238,13 +238,13 @@ jobs:
 
       - name: Prepare Artifacts
         working-directory: ${{ github.workspace }}
-        run: tarlz -c9vf OpenStarbound-Linux-GCC.tar.lz dist
+        run: tar -cf OpenStarbound-Linux-GCC.tar.gz --use-compress-program 'gzip -9' dist
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-GCC
-          path: OpenStarbound-Linux-GCC.tar.lz
+          path: OpenStarbound-Linux-GCC.tar.gz
           archive: false
 
       - name: Run Tests
@@ -260,21 +260,21 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           scripts/ci/linux/assemble.sh
-          mv -v client.tar.lz OpenStarbound-Linux-GCC-Client.tar.lz
-          mv -v server.tar.lz OpenStarbound-Linux-GCC-Server.tar.lz
+          mv -v client.tar.gz OpenStarbound-Linux-GCC-Client.tar.gz
+          mv -v server.tar.gz OpenStarbound-Linux-GCC-Server.tar.gz
 
       - name: Upload Client Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-GCC-Client
-          path: OpenStarbound-Linux-GCC-Client.tar.lz
+          path: OpenStarbound-Linux-GCC-Client.tar.gz
           archive: false
 
       - name: Upload Server Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-GCC-Server
-          path: OpenStarbound-Linux-GCC-Server.tar.lz
+          path: OpenStarbound-Linux-GCC-Server.tar.gz
           archive: false
 
   build_linux_clang:
@@ -294,7 +294,7 @@ jobs:
           libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
           libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
           libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev \
-          autoconf autoconf-archive automake libtool patchelf tarlz
+          autoconf autoconf-archive automake libtool patchelf
 
       - name: Install CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -342,13 +342,13 @@ jobs:
 
       - name: Prepare Artifacts
         working-directory: ${{ github.workspace }}
-        run: tarlz -c9vf OpenStarbound-Linux-Clang.tar.lz dist
+        run: tar -cf OpenStarbound-Linux-Clang.tar.gz --use-compress-program 'gzip -9' dist
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-Clang
-          path: OpenStarbound-Linux-Clang.tar.lz
+          path: OpenStarbound-Linux-Clang.tar.gz
           archive: false
 
       - name: Run Tests
@@ -364,21 +364,21 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           scripts/ci/linux/assemble.sh
-          mv -v client.tar.lz OpenStarbound-Linux-Clang-Client.tar.lz
-          mv -v server.tar.lz OpenStarbound-Linux-Clang-Server.tar.lz
+          mv -v client.tar.gz OpenStarbound-Linux-Clang-Client.tar.gz
+          mv -v server.tar.gz OpenStarbound-Linux-Clang-Server.tar.gz
 
       - name: Upload Client Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-Clang-Client
-          path: OpenStarbound-Linux-Clang-Client.tar.lz
+          path: OpenStarbound-Linux-Clang-Client.tar.gz
           archive: false
 
       - name: Upload Server Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-Clang-Server
-          path: OpenStarbound-Linux-Clang-Server.tar.lz
+          path: OpenStarbound-Linux-Clang-Server.tar.gz
           archive: false
   
   build_linux_arm:
@@ -395,7 +395,7 @@ jobs:
           libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
           libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
           libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev \
-          autoconf autoconf-archive automake libtool patchelf tarlz
+          autoconf autoconf-archive automake libtool patchelf
 
       - name: Install CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -438,13 +438,13 @@ jobs:
 
       - name: Prepare Artifacts
         working-directory: ${{ github.workspace }}
-        run: tarlz -c9vf OpenStarbound-Linux-ARM-GCC.tar.lz dist
+        run: tar -cf OpenStarbound-Linux-ARM-GCC.tar.gz --use-compress-program 'gzip -9' dist
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-ARM-GCC
-          path: OpenStarbound-Linux-ARM-GCC.tar.lz
+          path: OpenStarbound-Linux-ARM-GCC.tar.gz
           archive: false
 
       - name: Run Tests
@@ -460,21 +460,21 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           scripts/ci/linux/assemble.sh
-          mv -v client.tar.lz OpenStarbound-Linux-ARM-GCC-Client.tar.lz
-          mv -v server.tar.lz OpenStarbound-Linux-ARM-GCC-Server.tar.lz
+          mv -v client.tar.gz OpenStarbound-Linux-ARM-GCC-Client.tar.gz
+          mv -v server.tar.gz OpenStarbound-Linux-ARM-GCC-Server.tar.gz
 
       - name: Upload Client Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-ARM-GCC-Client
-          path: OpenStarbound-Linux-ARM-GCC-Client.tar.lz
+          path: OpenStarbound-Linux-ARM-GCC-Client.tar.gz
           archive: false
 
       - name: Upload Server Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-ARM-GCC-Server
-          path: OpenStarbound-Linux-ARM-GCC-Server.tar.lz
+          path: OpenStarbound-Linux-ARM-GCC-Server.tar.gz
           archive: false
 
   build_linux_arm_clang:
@@ -494,7 +494,7 @@ jobs:
           libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
           libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
           libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-dev \
-          autoconf autoconf-archive automake libtool patchelf tarlz
+          autoconf autoconf-archive automake libtool patchelf
 
       - name: Install CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -537,13 +537,13 @@ jobs:
 
       - name: Prepare Artifacts
         working-directory: ${{ github.workspace }}
-        run: tarlz -c9vf OpenStarbound-Linux-ARM-Clang.tar.lz dist
+        run: tar -cf OpenStarbound-Linux-ARM-Clang.tar.gz --use-compress-program 'gzip -9' dist
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-ARM-Clang
-          path: OpenStarbound-Linux-ARM-Clang.tar.lz
+          path: OpenStarbound-Linux-ARM-Clang.tar.gz
           archive: false
 
       - name: Run Tests
@@ -559,21 +559,21 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: |
           scripts/ci/linux/assemble.sh
-          mv -v client.tar.lz OpenStarbound-Linux-ARM-Clang-Client.tar.lz
-          mv -v server.tar.lz OpenStarbound-Linux-ARM-Clang-Server.tar.lz
+          mv -v client.tar.gz OpenStarbound-Linux-ARM-Clang-Client.tar.gz
+          mv -v server.tar.gz OpenStarbound-Linux-ARM-Clang-Server.tar.gz
 
       - name: Upload Client Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-ARM-Clang-Client
-          path: OpenStarbound-Linux-ARM-Clang-Client.tar.lz
+          path: OpenStarbound-Linux-ARM-Clang-Client.tar.gz
           archive: false
 
       - name: Upload Server Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-Linux-ARM-Clang-Server
-          path: OpenStarbound-Linux-ARM-Clang-Server.tar.lz
+          path: OpenStarbound-Linux-ARM-Clang-Server.tar.gz
           archive: false
 
   build-mac-intel:
@@ -588,7 +588,7 @@ jobs:
 
       - name: Install Packages
         run: |
-          brew install autoconf automake libtool tarlz
+          brew install autoconf automake libtool
 
       - name: Install CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -637,27 +637,27 @@ jobs:
       - name: Prepare Artifacts
         working-directory: ${{ github.workspace }}
         run: |
-          tarlz -c9vf dist.tar.lz dist
-          mv -v dist.tar.lz OpenStarbound-macOS-Intel.tar.lz
+          tar -cf dist.tar.gz --use-compress-program 'gzip -9' dist
+          mv -v dist.tar.gz OpenStarbound-macOS-Intel.tar.gz
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-macOS-Intel
-          path: OpenStarbound-macOS-Intel.tar.lz
+          path: OpenStarbound-macOS-Intel.tar.gz
           archive: false
 
       - name: Assemble Files
         working-directory: ${{ github.workspace }}
         run: |
           scripts/ci/macos/assemble.sh
-          mv -v client.tar.lz OpenStarbound-macOS-Intel-Client.tar.lz
+          mv -v client.tar.gz OpenStarbound-macOS-Intel-Client.tar.gz
 
       - name: Upload Client Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-macOS-Intel-Client
-          path: OpenStarbound-macOS-Intel-Client.tar.lz
+          path: OpenStarbound-macOS-Intel-Client.tar.gz
           archive: false
 
   build-mac-arm:
@@ -672,7 +672,7 @@ jobs:
 
       - name: Install Packages
         run: |
-          brew install autoconf automake libtool tarlz
+          brew install autoconf automake libtool
 
       - name: Install CMake & Ninja
         uses: lukka/get-cmake@latest
@@ -721,25 +721,25 @@ jobs:
       - name: Prepare Artifacts
         working-directory: ${{ github.workspace }}
         run: |
-          tarlz -c9vf dist.tar.lz dist
-          mv -v dist.tar.lz OpenStarbound-macOS-Silicon.tar.lz
+          tar -cf dist.tar.gz --use-compress-program 'gzip -9' dist
+          mv -v dist.tar.gz OpenStarbound-macOS-Silicon.tar.gz
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-macOS-Silicon
-          path: OpenStarbound-macOS-Silicon.tar.lz
+          path: OpenStarbound-macOS-Silicon.tar.gz
           archive: false
 
       - name: Assemble Files
         working-directory: ${{ github.workspace }}
         run: |
           scripts/ci/macos/assemble.sh
-          mv -v client.tar.lz OpenStarbound-macOS-Silicon-Client.tar.lz
+          mv -v client.tar.gz OpenStarbound-macOS-Silicon-Client.tar.gz
 
       - name: Upload Client Files
         uses: actions/upload-artifact@v7.0.1
         with:
           name: OpenStarbound-macOS-Silicon-Client
-          path: OpenStarbound-macOS-Silicon-Client.tar.lz
+          path: OpenStarbound-macOS-Silicon-Client.tar.gz
           archive: false

@@ -29,4 +29,4 @@ cp \
   scripts/steam_appid.txt \
   client_distribution/osx/
 
-tarlz -c9vf client.tar.lz client_distribution
+COPYFILE_DISABLE=1 tar -cf client.tar.gz --use-compress-program 'gzip -9' client_distribution

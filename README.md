@@ -39,12 +39,12 @@ These link directly to the latest build from the [Actions](https://github.com/Op
 ### **notice: get Linux and macOS builds directly from the [Actions](https://github.com/OpenStarbound/OpenStarbound/actions?query=branch%3Amain) tab until the nightly.link service fixes things**
 
 **Linux**
-~~[Client](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-Linux-Clang-Client.tar.lz),~~
-~~[Server](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-Linux-Clang-Server.tar.lz)~~
+~~[Client](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-Linux-Clang-Client.tar.gz),~~
+~~[Server](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-Linux-Clang-Server.tar.gz)~~
 
 **macOS**
-~~[Intel](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-macOS-Intel-Client.tar.lz),~~
-~~[ARM](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-macOS-Silicon-Client.tar.lz)~~
+~~[Intel](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-macOS-Intel-Client.tar.gz),~~
+~~[ARM](https://nightly.link/OpenStarbound/OpenStarbound/workflows/build/main/OpenStarbound-macOS-Silicon-Client.tar.gz)~~
 
 ---
 
