@@ -28,6 +28,7 @@ SET (star_windowing_HEADERS
         StarLayout.hpp
         StarListWidget.hpp
         StarPane.hpp
+        StarPaneExtensions.hpp
         StarPaneManager.hpp
         StarPortraitWidget.hpp
         StarProgressWidget.hpp
@@ -35,6 +36,7 @@ SET (star_windowing_HEADERS
         StarSliderBar.hpp
         StarStackWidget.hpp
         StarTabSet.hpp
+        StarTooltipPlacement.hpp
         StarTextBoxWidget.hpp
         StarVerticalLayout.hpp
         StarWidget.hpp
@@ -61,6 +63,7 @@ SET (star_windowing_SOURCES
         StarLargeCharPlateWidget.cpp
         StarListWidget.cpp
         StarPane.cpp
+        StarPaneExtensions.cpp
         StarPaneManager.cpp
         StarPortraitWidget.cpp
         StarProgressWidget.cpp

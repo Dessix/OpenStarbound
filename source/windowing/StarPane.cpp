@@ -7,6 +7,7 @@
 #include "StarImageWidget.hpp"
 #include "StarItemDatabase.hpp"
 #include "StarGuiReader.hpp"
+#include "StarPaneExtensions.hpp"
 
 namespace Star {
 
@@ -40,6 +41,8 @@ Pane::Pane() {
   m_titleColor = jsonToColor(assets->json("/interface.config:paneTitleColor"));
   m_subTitleColor = jsonToColor(assets->json("/interface.config:paneSubTitleColor"));
 }
+
+Pane::~Pane() = default;
 
 void Pane::displayed() {
   m_dismissed = false;
@@ -511,19 +514,39 @@ GuiReaderPtr Pane::reader() {
   return make_shared<GuiReader>();
 }
 
+PaneExtensions& Pane::extensions() {
+  if (!m_extensions)
+    m_extensions = make_unique<PaneExtensions>(this);
+  return *m_extensions;
+}
+
+PaneExtensions* Pane::findExtensions() const {
+  return m_extensions.get();
+}
+
 void Pane::renderImpl() {
+  // extensions may move the stock panel inside the pane and insert strips
+  // above its footer
+  Vec2F origin = Vec2F(position());
+  int strip = 0;
+  if (m_extensions) {
+    m_extensions->render(true);
+    origin += Vec2F(m_extensions->stockOffset());
+    strip = m_extensions->stripSize();
+  }
+
   if (m_bgFooter != "")
-    m_context->drawInterfaceQuad(m_bgFooter, Vec2F(position()));
+    m_context->drawInterfaceQuad(m_bgFooter, origin);
 
   if (m_bgBody != "")
-    m_context->drawInterfaceQuad(m_bgBody, Vec2F(position()) + Vec2F(0, m_footerSize[1]));
+    m_context->drawInterfaceQuad(m_bgBody, origin + Vec2F(0, m_footerSize[1] + strip));
 
   if (m_bgHeader != "") {
-    auto headerPos = Vec2F(position()) + Vec2F(0, m_footerSize[1] + m_bodySize[1]);
+    auto headerPos = origin + Vec2F(0, m_footerSize[1] + strip + m_bodySize[1]);
     m_context->drawInterfaceQuad(m_bgHeader, headerPos);
 
     if (m_icon) {
-      m_icon->setPosition(Vec2I(0, m_footerSize[1] + m_bodySize[1]) + m_iconOffset);
+      m_icon->setPosition(Vec2I(headerPos - Vec2F(position())) + m_iconOffset);
       m_icon->render(m_drawingArea);
       m_context->resetInterfaceScissorRect();
     }
@@ -536,6 +559,14 @@ void Pane::renderImpl() {
     m_context->renderInterfaceText(m_subTitle, {headerPos + Vec2F(m_subTitleOffset)});
     m_context->clearTextStyle();
   }
+
+  if (m_extensions)
+    m_extensions->render(false);
+}
+
+void Pane::drawChildren() {
+  if (!m_extensions || !m_extensions->drawChildren())
+    Widget::drawChildren();
 }
 
 }

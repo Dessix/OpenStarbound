@@ -1,6 +1,6 @@
 #include "StarItemTooltip.hpp"
 #include "StarGuiReader.hpp"
-#include "StarPane.hpp"
+#include "StarPaneExtensions.hpp"
 #include "StarListWidget.hpp"
 #include "StarLabelWidget.hpp"
 #include "StarRoot.hpp"
@@ -44,6 +44,7 @@ PanePtr ItemTooltipBuilder::buildItemTooltip(ItemPtr const& item, PlayerPtr cons
     titleIcon->setBackingImageAffinity(true, true);
     titleIcon->showRarity(false);
     tooltip->setTitle(titleIcon, title, subTitle);
+    tooltip->extensions().setTooltipInfo("item", item);
 
     return tooltip;
   }

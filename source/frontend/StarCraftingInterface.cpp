@@ -10,6 +10,7 @@
 #include "StarPlayerBlueprints.hpp"
 #include "StarButtonWidget.hpp"
 #include "StarPaneManager.hpp"
+#include "StarPaneExtensions.hpp"
 #include "StarPortraitWidget.hpp"
 #include "StarLabelWidget.hpp"
 #include "StarTextBoxWidget.hpp"
@@ -496,6 +497,10 @@ PanePtr CraftingPane::setupTooltip(ItemRecipe const& recipe) {
   title->setPosition(title->position() + Vec2I(0, guiList->size()[1]));
 
   tooltip->setSize(background->size());
+  ItemPtr output = recipe.output.count() == 1 ? m_itemCache.value(recipe.output) : ItemPtr();
+  if (!output)
+    output = itemDb->itemShared(recipe.output);
+  tooltip->extensions().setTooltipInfo("recipe", output);
 
   return tooltip;
 }

@@ -2,7 +2,7 @@
 #include "StarRoot.hpp"
 #include "StarAssets.hpp"
 #include "StarGuiReader.hpp"
-#include "StarPane.hpp"
+#include "StarPaneExtensions.hpp"
 
 namespace Star {
 
@@ -16,6 +16,7 @@ PanePtr SimpleTooltipBuilder::buildTooltip(String const& text) {
   auto stretchBackground = tooltip->fetchChild<Widget>("stretchBackground");
   stretchBackground->setSize(Vec2I{tooltip->fetchChild<Widget>("contentLabel")->size()[0] + 8, stretchBackground->size()[1]});
   tooltip->setSize(stretchBackground->size());
+  tooltip->extensions().setTooltipInfo("text");
 
   return tooltip;
 }
