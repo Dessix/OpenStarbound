@@ -662,7 +662,7 @@ jobs:
 
   build-mac-arm:
     name: Build OpenStarbound macOS arm64
-    runs-on: macos-14
+    runs-on: macos-15
     if: ${{ (github.event_name != 'pull_request') && ((github.event_name != 'workflow_dispatch') || (inputs.macOS == true)) }}
     #if: ${{ (github.event_name == 'workflow_dispatch') && (inputs.macOS == true) }}
     steps:
