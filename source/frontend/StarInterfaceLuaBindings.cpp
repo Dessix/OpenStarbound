@@ -42,6 +42,18 @@ LuaCallbacks LuaBindings::makeInterfaceCallbacks(MainInterface* mainInterface) {
     return GuiContext::singleton().interfaceScale();
   });
 
+  callbacks.registerCallback("textSize", [](String const& text, Maybe<unsigned> fontSize, Maybe<unsigned> wrapWidth) -> Vec2F {
+    auto& context = GuiContext::singleton();
+    TextStyle style = Root::singleton().assets()->json("/interface.config:labelTextStyle");
+    if (fontSize)
+      style.fontSize = *fontSize;
+    // leave the text style as it was found, also on error
+    auto& painter = context.textPainter();
+    auto restore = finally([&painter, previous = painter->textStyle()]() { painter->setTextStyle(previous); });
+    context.setTextStyle(style);
+    return context.determineInterfaceTextSize(text, TextPositioning(Vec2F(), HorizontalAnchor::LeftAnchor, VerticalAnchor::BottomAnchor, wrapWidth)).size();
+  });
+
   callbacks.registerCallback("queueMessage", [mainInterface](String const& message, Maybe<float> cooldown, Maybe<float> springState) {
     mainInterface->queueMessage(message, cooldown, springState.value(0));
   });

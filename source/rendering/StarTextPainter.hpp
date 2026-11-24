@@ -72,6 +72,7 @@ public:
   void setFontColor(Vec4B color);
   void setProcessingDirectives(StringView directives, bool back = false);
   void setFont(String const& font);
+  TextStyle const& textStyle() const;
   TextStyle& setTextStyle(TextStyle const& textStyle);
   void clearTextStyle();
   void addFont(FontPtr const& font, String const& name);

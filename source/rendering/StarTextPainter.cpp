@@ -297,6 +297,10 @@ void TextPainter::setFont(String const& font) {
   m_fontTextureGroup.switchFont(m_renderSettings.font = font);
 }
 
+TextStyle const& TextPainter::textStyle() const {
+  return m_renderSettings;
+}
+
 TextStyle& TextPainter::setTextStyle(TextStyle const& textStyle) {
   TextStyle& style = m_renderSettings = textStyle;
   modifyDirectives(style.directives);

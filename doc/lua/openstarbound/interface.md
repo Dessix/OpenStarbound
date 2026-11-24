@@ -22,6 +22,12 @@ Returns the HUD's visibility.
 
 ---
 
+#### `Vec2F` interface.textSize(`String` text, [`unsigned` fontSize], [`unsigned` wrapWidth])
+
+Returns the size, in interface pixels, that a label with the default label style would take to draw `text`, optionally wrapped at `wrapWidth`. Escape codes such as `^#ff0000;` take no space. Use it to fit text before adding labels, for example to cut a line with an ellipsis.
+
+---
+
 #### `PaneId` interface.bindRegisteredPane(`String` paneName)
 Binds a registered pane (defined in `/source/frontend/StarMainInterfaceTypes`) to a Lua value, which can then call widget functions on that pane.
 <details><summary><b>Panes</b></summary>
