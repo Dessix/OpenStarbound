@@ -3,6 +3,8 @@
 #include "StarJsonExtra.hpp"
 #include "StarAssets.hpp"
 #include "StarRoot.hpp"
+#include "StarPaneExtensions.hpp"
+#include "StarTooltipPlacement.hpp"
 
 namespace Star {
 
@@ -20,6 +22,9 @@ PaneManager::PaneManager()
   m_tooltipMouseoverRadius = assets->json("/panes.config:tooltipMouseoverRadius").toFloat();
   m_tooltipMouseOffset = jsonToVec2I(assets->json("/panes.config:tooltipMouseoverOffset"));
   m_tooltipShowTimer = GameTimer(assets->json("/panes.config:tooltipMouseoverTime").toFloat());
+  m_tooltipScrollHold = assets->json("/panes.config:tooltipScrollHold").toFloat();
+  m_tooltipScrollSpeed = assets->json("/panes.config:tooltipScrollSpeed").toFloat();
+  m_tooltipPanelGap = assets->json("/panes.config:tooltipPanelGap").toInt();
 }
 
 void PaneManager::displayPane(PaneLayer paneLayer, PanePtr const& pane, DismissCallback onDismiss) {
@@ -147,6 +152,14 @@ void PaneManager::setBackgroundWidget(WidgetPtr bg) {
   m_backgroundWidget = bg;
 }
 
+void PaneManager::setTooltipHook(TooltipHook hook) {
+  m_tooltipHook = std::move(hook);
+}
+
+void PaneManager::refreshTooltip() {
+  m_tooltipRefresh = true;
+}
+
 void PaneManager::dismissWhere(function<bool(PanePtr const&)> func) {
   if (!func)
     return;
@@ -211,6 +224,7 @@ bool PaneManager::sendInputEvent(InputEvent const& event) {
     if (m_activeTooltip) {
       dismiss(m_activeTooltip);
       m_activeTooltip.reset();
+      m_tooltipSides.clear();
       m_tooltipParentPane.reset();
       m_tooltipShowTimer.reset();
     }
@@ -294,7 +308,8 @@ void PaneManager::render() {
 void PaneManager::update(float dt) {
   auto newTooltipParentPane = getPaneAt(m_tooltipLastMousePos);
 
-  bool updateTooltip = m_tooltipShowTimer.tick(dt) || (m_activeTooltip && (
+  bool refresh = std::exchange(m_tooltipRefresh, false) && m_activeTooltip;
+  bool updateTooltip = refresh || m_tooltipShowTimer.tick(dt) || (m_activeTooltip && (
     vmag(m_tooltipInitialPosition - m_tooltipLastMousePos) > m_tooltipMouseoverRadius
     || m_tooltipParentPane != newTooltipParentPane
     || !m_tooltipParentPane->inWindow(m_tooltipLastMousePos))); 
@@ -305,11 +320,20 @@ void PaneManager::update(float dt) {
       m_activeTooltip.reset();
       m_tooltipParentPane.reset();
     }
+    // a refreshed tooltip keeps the sides its sections were placed on
+    if (!refresh)
+      m_tooltipSides.clear();
 
     m_tooltipShowTimer.reset();
     if (newTooltipParentPane) {
-      if (auto tooltip = newTooltipParentPane->createTooltip(m_tooltipLastMousePos)) {
+      auto tooltip = newTooltipParentPane->createTooltip(m_tooltipLastMousePos);
+      if (tooltip && m_tooltipHook) {
+        Vec2I mousePos = m_tooltipLastMousePos;
+        tooltip = m_tooltipHook(std::move(tooltip), [&]() { return newTooltipParentPane->createTooltip(mousePos); });
+      }
+      if (tooltip) {
         m_activeTooltip = std::move(tooltip);
+        m_tooltipShownTime = 0;
         m_tooltipParentPane = std::move(newTooltipParentPane);
         m_tooltipInitialPosition = m_tooltipLastMousePos;
         displayPane(PaneLayer::Tooltip, m_activeTooltip);
@@ -317,7 +341,11 @@ void PaneManager::update(float dt) {
     }
   }
 
-  if (m_activeTooltip) {
+  auto extensions = m_activeTooltip ? m_activeTooltip->findExtensions() : nullptr;
+  if (extensions && extensions->hasSections()) {
+    m_tooltipShownTime += dt;
+    placeTooltipPane();
+  } else if (m_activeTooltip) {
     Vec2I offsetDirection = Vec2I::filled(1);
     Vec2I offsetAdjust = Vec2I();
 
@@ -348,6 +376,43 @@ void PaneManager::update(float dt) {
         panePair.first->update(dt);
     }
   }
+}
+
+// A hook may have extended the tooltip with panels beside, below or above it;
+// those are placed to fit on screen around the stock panel (see placeTooltip).
+// Tooltips without panels keep the stock placement.
+void PaneManager::placeTooltipPane() {
+  auto& extensions = *m_activeTooltip->findExtensions();
+  Vec2I stockSize = extensions.stockSize();
+  List<TooltipSection> sections;
+  for (auto const& extension : extensions.extensions()) {
+    if (!extension.side)
+      continue;
+    TooltipSection section;
+    section.sides = extension.sides;
+    section.size = Vec2I(extension.artRect.width(), extension.contentHeight);
+    section.margins = extensions.extensionMargins(extension);
+    sections.append(std::move(section));
+  }
+
+  Vec2F window = Vec2F(m_context->windowSize()) / m_context->interfaceScale();
+  auto placement = placeTooltip(window, m_tooltipLastMousePos, m_tooltipMouseOffset, stockSize, sections, m_tooltipSides,
+      TooltipSpacing{extensions.stockMargins(), m_tooltipPanelGap});
+  m_tooltipSides = placement.sides;
+
+  List<pair<TooltipSide, RectI>> placements;
+  for (size_t i = 0; i < placement.sides.size(); ++i)
+    placements.append({placement.sides[i], placement.rects[i].translated(-placement.stockPosition)});
+  extensions.placeExtensions(placements);
+  m_activeTooltip->setPosition(placement.stockPosition - extensions.stockOffset());
+
+  // over-tall sections scroll; only the drawing offset changes
+  List<int> scroll;
+  for (auto const& extension : extensions.extensions()) {
+    if (extension.side)
+      scroll.append(tooltipScrollOffset(m_tooltipShownTime, extension.contentHeight, extension.rect.height(), m_tooltipScrollHold, m_tooltipScrollSpeed));
+  }
+  extensions.setExtensionScroll(scroll);
 }
 
 Vec2I PaneManager::windowSize() const {

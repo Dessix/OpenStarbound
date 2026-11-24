@@ -71,6 +71,7 @@ SET (star_windowing_SOURCES
         StarSliderBar.cpp
         StarStackWidget.cpp
         StarTabSet.cpp
+        StarTooltipPlacement.cpp
         StarTextBoxWidget.cpp
         StarVerticalLayout.cpp
         StarWidget.cpp
