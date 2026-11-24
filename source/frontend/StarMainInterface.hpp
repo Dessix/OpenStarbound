@@ -42,6 +42,7 @@ STAR_CLASS(ContainerInteractor);
 STAR_CLASS(ScriptPane);
 STAR_CLASS(ChatBubbleManager);
 STAR_CLASS(CanvasWidget);
+STAR_CLASS(TooltipHooks);
 
 STAR_STRUCT(GuiMessage);
 STAR_CLASS(MainInterface);
@@ -69,6 +70,7 @@ public:
   RunningState currentState() const;
 
   MainInterfacePaneManager* paneManager();
+  TooltipHooksPtr tooltipHooks() const;
 
   bool escapeDialogOpen() const;
 
@@ -169,6 +171,7 @@ private:
   CinematicPtr m_cinematicOverlay;
 
   MainInterfacePaneManager m_paneManager;
+  TooltipHooksPtr m_tooltipHooks;
 
   QuestLogInterfacePtr m_questLogInterface;
 

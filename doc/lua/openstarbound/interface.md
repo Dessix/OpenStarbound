@@ -28,6 +28,18 @@ Returns the size, in interface pixels, that a label with the default label style
 
 ---
 
+#### `bool` interface.clearTooltipCache(`String` name, [`String` itemName])
+
+Clears the cached results of the named tooltip augmentation, either all of them or only those for `itemName`. See [tooltips](tooltips.md).
+
+---
+
+#### `void` interface.refreshTooltip()
+
+Rebuilds the tooltip that is showing, if any. Does nothing when no tooltip is shown.
+
+---
+
 #### `PaneId` interface.bindRegisteredPane(`String` paneName)
 Binds a registered pane (defined in `/source/frontend/StarMainInterfaceTypes`) to a Lua value, which can then call widget functions on that pane.
 <details><summary><b>Panes</b></summary>

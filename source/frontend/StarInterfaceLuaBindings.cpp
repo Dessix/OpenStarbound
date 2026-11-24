@@ -7,6 +7,7 @@
 #include "StarChat.hpp"
 #include "StarUniverseClient.hpp"
 #include "StarClientCommandProcessor.hpp"
+#include "StarTooltipHooks.hpp"
 
 namespace Star {
 
@@ -24,7 +25,15 @@ LuaCallbacks LuaBindings::makeInterfaceCallbacks(MainInterface* mainInterface) {
     return {};
   });
 
-  
+  callbacks.registerCallback("clearTooltipCache", [mainInterface](String const& name, Maybe<String> const& itemName) -> bool {
+    return mainInterface->tooltipHooks()->clearCache(name, itemName);
+  });
+
+  callbacks.registerCallback("refreshTooltip", [mainInterface]() {
+    if (mainInterface->tooltipHooks()->refreshAllowed())
+      mainInterface->paneManager()->refreshTooltip();
+  });
+
   callbacks.registerCallback("bindRegisteredPane", [mainInterface](String const& registeredPaneName) -> Maybe<LuaCallbacks> {
     if (auto pane = mainInterface->paneManager()->maybeRegisteredPane(MainInterfacePanesNames.getLeft(registeredPaneName)))
       return pane->makePaneCallbacks();
