@@ -1,0 +1,9 @@
+{
+  // Tooltip sections taller than the window scroll: they hold at the top and at
+  // the bottom for tooltipScrollHold seconds and scroll at tooltipScrollSpeed
+  // interface pixels per second (0 turns scrolling off).
+  "tooltipScrollHold" : 1.5,
+  "tooltipScrollSpeed" : 25,
+  // Space between the visible edges (shadows excluded) of a tooltip's panels.
+  "tooltipPanelGap" : 1
+}

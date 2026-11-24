@@ -7,6 +7,7 @@
 #include "StarChat.hpp"
 #include "StarUniverseClient.hpp"
 #include "StarClientCommandProcessor.hpp"
+#include "StarTooltipHooks.hpp"
 
 namespace Star {
 
@@ -24,7 +25,15 @@ LuaCallbacks LuaBindings::makeInterfaceCallbacks(MainInterface* mainInterface) {
     return {};
   });
 
-  
+  callbacks.registerCallback("clearTooltipCache", [mainInterface](String const& name, Maybe<String> const& itemName) -> bool {
+    return mainInterface->tooltipHooks()->clearCache(name, itemName);
+  });
+
+  callbacks.registerCallback("refreshTooltip", [mainInterface]() {
+    if (mainInterface->tooltipHooks()->refreshAllowed())
+      mainInterface->paneManager()->refreshTooltip();
+  });
+
   callbacks.registerCallback("bindRegisteredPane", [mainInterface](String const& registeredPaneName) -> Maybe<LuaCallbacks> {
     if (auto pane = mainInterface->paneManager()->maybeRegisteredPane(MainInterfacePanesNames.getLeft(registeredPaneName)))
       return pane->makePaneCallbacks();
@@ -40,6 +49,18 @@ LuaCallbacks LuaBindings::makeInterfaceCallbacks(MainInterface* mainInterface) {
 
   callbacks.registerCallback("scale", []() {
     return GuiContext::singleton().interfaceScale();
+  });
+
+  callbacks.registerCallback("textSize", [](String const& text, Maybe<unsigned> fontSize, Maybe<unsigned> wrapWidth) -> Vec2F {
+    auto& context = GuiContext::singleton();
+    TextStyle style = Root::singleton().assets()->json("/interface.config:labelTextStyle");
+    if (fontSize)
+      style.fontSize = *fontSize;
+    // leave the text style as it was found, also on error
+    auto& painter = context.textPainter();
+    auto restore = finally([&painter, previous = painter->textStyle()]() { painter->setTextStyle(previous); });
+    context.setTextStyle(style);
+    return context.determineInterfaceTextSize(text, TextPositioning(Vec2F(), HorizontalAnchor::LeftAnchor, VerticalAnchor::BottomAnchor, wrapWidth)).size();
   });
 
   callbacks.registerCallback("queueMessage", [mainInterface](String const& message, Maybe<float> cooldown, Maybe<float> springState) {

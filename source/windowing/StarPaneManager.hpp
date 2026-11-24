@@ -7,6 +7,8 @@
 
 namespace Star {
 
+enum class TooltipSide;
+
 STAR_CLASS(PaneManager);
 
 enum class PaneLayer {
@@ -35,6 +37,8 @@ extern EnumMap<PaneLayer> const PaneLayerNames;
 class PaneManager {
 public:
   typedef function<void(PanePtr const&)> DismissCallback;
+  // Applied to each new tooltip; rebuild() re-creates the stock tooltip.
+  typedef function<PanePtr(PanePtr tooltip, function<PanePtr()> const& rebuild)> TooltipHook;
 
   PaneManager();
 
@@ -67,6 +71,10 @@ public:
 
   void setBackgroundWidget(WidgetPtr bg);
 
+  void setTooltipHook(TooltipHook hook);
+  // Re-creates the active tooltip on the next update.
+  void refreshTooltip();
+
   void dismissWhere(function<bool(PanePtr const&)> func);
 
   // Returns the pane/widget that has captured the keyboard, if any.
@@ -83,6 +91,7 @@ public:
 
 private:
   Vec2I windowSize() const;
+  void placeTooltipPane();
   Vec2I calculatePaneOffset(PanePtr const& pane) const;
   Vec2I calculateNewInterfacePosition(PanePtr const& pane, float interfaceScaleRatio) const;
   bool dismiss(PanePtr const& pane);
@@ -102,6 +111,13 @@ private:
   Vec2I m_tooltipInitialPosition;
   PanePtr m_activeTooltip;
   PanePtr m_tooltipParentPane;
+  TooltipHook m_tooltipHook;
+  bool m_tooltipRefresh = false;
+  List<TooltipSide> m_tooltipSides;
+  float m_tooltipShownTime = 0;
+  float m_tooltipScrollHold;
+  float m_tooltipScrollSpeed;
+  int m_tooltipPanelGap;
 };
 
 }

@@ -54,6 +54,7 @@ SET (star_frontend_HEADERS
     StarTitleScreen.hpp
     StarScriptPane.hpp
     StarSimpleTooltip.hpp
+    StarTooltipHooks.hpp
     StarSongbookInterface.hpp
     StarStatusPane.hpp
     StarShadersMenu.hpp
@@ -108,6 +109,7 @@ SET (star_frontend_SOURCES
     StarTitleScreen.cpp
     StarScriptPane.cpp
     StarSimpleTooltip.cpp
+    StarTooltipHooks.cpp
     StarSongbookInterface.cpp
     StarStatusPane.cpp
     StarShadersMenu.cpp

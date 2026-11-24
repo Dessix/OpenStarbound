@@ -18,6 +18,7 @@
 #include "StarImageMetadataDatabase.hpp"
 #include "StarGuiReader.hpp"
 #include "StarPaneManager.hpp"
+#include "StarTooltipHooks.hpp"
 #include "StarClientCommandProcessor.hpp"
 #include "StarChat.hpp"
 #include "StarOptionsMenu.hpp"
@@ -199,6 +200,7 @@ MainInterface::MainInterface(UniverseClientPtr client, WorldPainterPtr painter, 
   m_nameplatePainter = make_shared<NameplatePainter>();
   m_questIndicatorPainter = make_shared<QuestIndicatorPainter>(m_client);
   m_chatBubbleManager = make_shared<ChatBubbleManager>();
+  m_tooltipHooks = make_shared<TooltipHooks>(m_client);
 }
 
 MainInterface::~MainInterface() {
@@ -211,6 +213,10 @@ MainInterface::RunningState MainInterface::currentState() const {
 
 MainInterfacePaneManager* MainInterface::paneManager() {
   return &m_paneManager;
+}
+
+TooltipHooksPtr MainInterface::tooltipHooks() const {
+  return m_tooltipHooks;
 }
 
 bool MainInterface::escapeDialogOpen() const {
@@ -550,6 +556,16 @@ void MainInterface::preUpdate(float) {
 }
 
 void MainInterface::update(float dt) {
+  if (m_tooltipHooks->reloadIfNeeded()) {
+    if (m_tooltipHooks->enabled()) {
+      m_paneManager.setTooltipHook([this](PanePtr tooltip, function<PanePtr()> const& rebuild) {
+        return m_tooltipHooks->apply(std::move(tooltip), rebuild);
+      });
+    } else {
+      m_paneManager.setTooltipHook({});
+    }
+  }
+  m_tooltipHooks->update(dt);
   m_paneManager.update(dt);
   m_cursor.update(dt);
 

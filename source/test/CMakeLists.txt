@@ -4,6 +4,7 @@ INCLUDE_DIRECTORIES (
     ${STAR_BASE_INCLUDES}
     ${STAR_PLATFORM_INCLUDES}
     ${STAR_GAME_INCLUDES}
+    ${PROJECT_SOURCE_DIR}/windowing
   )
 
 # Add top-level test directory so  gtest-all.cc can find its own include file
@@ -52,6 +53,8 @@ SET (star_core_tests_SOURCES
       string_test.cpp
       strong_typedef_test.cpp
       thread_test.cpp
+      tooltip_placement_test.cpp
+      ../windowing/StarTooltipPlacement.cpp
       worker_pool_test.cpp
       variant_test.cpp
       vlq_test.cpp

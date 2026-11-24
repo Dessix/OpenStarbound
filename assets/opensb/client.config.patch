@@ -1,6 +1,10 @@
 {
   "universeScriptContexts" : { "OpenStarbound" : ["/scripts/opensb/universeclient/universeclient.lua"] },
 
+  // Scripts that register tooltip augmentations (see doc/lua/openstarbound/tooltips.md).
+  // Mods append to this list with a patch guarded by a "test" op on this key.
+  "tooltipScripts" : [],
+
   // Disables scissoring and letterboxing on vanilla and modded warp cinematics
   "warpCinematicBase" : {
     "scissor" : false,

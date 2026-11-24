@@ -10,6 +10,7 @@ STAR_CLASS(Pane);
 STAR_CLASS(LuaCallbacks);
 STAR_CLASS(AudioInstance);
 STAR_CLASS(GuiReader);
+class PaneExtensions;
 
 enum class PaneAnchor {
   None,
@@ -28,6 +29,7 @@ extern EnumMap<PaneAnchor> const PaneAnchorNames;
 class Pane : public Widget {
 public:
   Pane();
+  ~Pane();
 
   struct BGResult {
     String header;
@@ -94,9 +96,15 @@ public:
   virtual Maybe<ItemPtr> shiftItemFromInventory(ItemPtr const& input);
 
   virtual LuaCallbacks makePaneCallbacks();
+
+  // Background extensions and tooltip tags (see StarPaneExtensions.hpp),
+  // created on first use; findExtensions() is null until then.
+  PaneExtensions& extensions();
+  PaneExtensions* findExtensions() const;
 protected:
   virtual GuiReaderPtr reader();
   virtual void renderImpl();
+  virtual void drawChildren();
 
   String m_bgHeader;
   String m_bgBody;
@@ -131,6 +139,10 @@ protected:
   bool m_hasDisplayed;
 
   List<pair<String, AudioInstancePtr>> m_playingSounds;
+
+private:
+  friend class PaneExtensions;
+  unique_ptr<PaneExtensions> m_extensions;
 };
 
 }
